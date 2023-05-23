@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
@@ -18,7 +19,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float maxSpeed = 3.4f;
     [SerializeField] private float jumpForce = 8f;
 
+    [SerializeField] private LayerMask groundMask;
+    [SerializeField] Transform chkPos;
+
+    private Vector2 perp;
+    private float angle;
     private bool isGround;
+    private bool isSlope;
 
     // Start is called before the first frame update
     void Awake()
@@ -26,19 +33,23 @@ public class PlayerController : MonoBehaviour
         player = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         render = GetComponent<SpriteRenderer>();
+        chkPos = GetComponent<Transform>();
     }
 
     // Update is called once per frame
     void Update()
     {
         Move();
+        RayChk();
     }
 
     private void OnMove(InputValue value)
     {
         moveInput.x = value.Get<Vector2>().x;
         moveInput.y = value.Get<Vector2>().y;
+
         animator.SetFloat("MoveSpeed", Mathf.Abs(moveInput.x));
+
         if (moveInput.x > 0)
             render.flipX = false;
         else if (moveInput.x < 0)
@@ -57,18 +68,63 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public float maxAngle;
     private void Move()
     {
-        if (moveInput.x < 0 && player.velocity.x > -maxSpeed)
+        //if (moveInput.x == 0)
+        //    player.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+        //else
+        //    player.constraints = RigidbodyConstraints2D.FreezeRotation;
+
+        if (!isSlope && LeftMaxSpeedChk())
         {
-            player.AddForce(moveInput.x * Vector2.right * moveSpeed, ForceMode2D.Force);
+            player.AddForce(moveInput.x * Vector2.right * moveSpeed * Time.deltaTime, ForceMode2D.Impulse);
         }
-        else if (moveInput.x > 0 && player.velocity.x < maxSpeed)
+        else if (!isSlope && RightMaxSpeedChk())
         {
-            player.AddForce(moveInput.x * Vector2.right * moveSpeed, ForceMode2D.Force);
+            player.AddForce(moveInput.x * Vector2.right * moveSpeed * Time.deltaTime, ForceMode2D.Impulse);
+        }
+        else if (isSlope && Mathf.Abs(angle) < maxAngle)
+        {
+            player.AddForce(moveInput.x * moveSpeed * Time.deltaTime * -perp, ForceMode2D.Impulse);
+        }
+        else if (isSlope && Mathf.Abs(angle) > maxAngle)
+        {
+            player.AddForce(moveInput.x * Time.deltaTime * -perp, ForceMode2D.Impulse);
         }
     }
 
+    private bool LeftMaxSpeedChk()
+    {
+        return moveInput.x < 0 && player.velocity.x > -maxSpeed;
+    }
+
+    private bool RightMaxSpeedChk()
+    {
+        return moveInput.x > 0 && player.velocity.x < maxSpeed;
+    }
+
+    private void RayChk()
+    {
+        RaycastHit2D hit;
+        hit = Physics2D.Raycast(chkPos.position, Vector2.down, 10f, groundMask);
+
+        if (hit)
+        {
+            angle = Vector2.Angle(hit.normal, Vector2.up);
+            perp = Vector2.Perpendicular(hit.normal).normalized;
+
+            if (angle != 0)
+                isSlope = true;
+            else
+                isSlope = false;
+
+            Debug.DrawLine(hit.point, hit.point + hit.normal, Color.red);
+            Debug.DrawLine(hit.point, hit.point + perp, Color.blue);
+        }
+    }
+        
+    
     private void Jump()
     {
         player.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
