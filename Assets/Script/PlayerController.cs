@@ -40,7 +40,12 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         Move();
+    }
+
+    private void FixedUpdate()
+    {
         RayChk();
+        DeadCheck();
     }
 
     private void OnMove(InputValue value)
@@ -64,18 +69,12 @@ public class PlayerController : MonoBehaviour
         {
             Jump();
             OnJumped?.Invoke();
-            isGround = false;
         }
     }
 
     public float maxAngle;
     private void Move()
     {
-        //if (moveInput.x == 0)
-        //    player.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
-        //else
-        //    player.constraints = RigidbodyConstraints2D.FreezeRotation;
-
         if (!isSlope && LeftMaxSpeedChk())
         {
             player.AddForce(moveInput.x * Vector2.right * moveSpeed * Time.deltaTime, ForceMode2D.Impulse);
@@ -107,7 +106,7 @@ public class PlayerController : MonoBehaviour
     private void RayChk()
     {
         RaycastHit2D hit;
-        hit = Physics2D.Raycast(chkPos.position, Vector2.down, 10f, groundMask);
+        hit = Physics2D.Raycast(chkPos.position, Vector2.down, 1.5f, groundMask);
 
         if (hit)
         {
@@ -119,8 +118,13 @@ public class PlayerController : MonoBehaviour
             else
                 isSlope = false;
 
+            //Debug.DrawLine(chkPos.position, new Vector3(hit.point.x, hit.point.y, 0) - chkPos.position, Color.red);
             Debug.DrawLine(hit.point, hit.point + hit.normal, Color.red);
             Debug.DrawLine(hit.point, hit.point + perp, Color.blue);
+        }
+        else
+        {
+            //Debug.DrawLine(transform.position, Vector2.down + hit.point, Color.red);
         }
     }
         
@@ -131,17 +135,27 @@ public class PlayerController : MonoBehaviour
         OnJumped?.Invoke();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Ground")
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
             isGround = true;
             animator.SetBool("IsGround", true);
         }
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+    private void OnTriggerExit2D(Collider2D collision)
     {
-        animator.SetBool("IsGround", false);
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Ground"))
+        {
+            isGround = false;
+            animator.SetBool("IsGround", false);
+        }
+    }
+
+    private void DeadCheck()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(chkPos.position, Vector2.down, 5.0f, groundMask);
+        
     }
 }
