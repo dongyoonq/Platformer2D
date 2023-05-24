@@ -61,7 +61,8 @@
     <Compile Include="Assets\Script\BlowTileScript\RightBlowAwayScript.cs" />
     <Compile Include="Assets\Script\BlowTileScript\LeftBlowAwayScript.cs" />
     <Compile Include="Assets\Script\JumpTileScript\JumpTile.cs" />
-    <Compile Include="Assets\Script\Monster\Bee.cs" />
+    <Compile Include="Assets\Script\Monster\BeeState\Bee.cs" />
+    <Compile Include="Assets\Script\Monster\BeeState\StateBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Imports\platformer-art-complete-pack-0\Extra animations and enemies\Spritesheets\alienBeige.xml" />
