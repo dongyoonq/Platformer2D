@@ -362,7 +362,6 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /Assets/Imports
-/Assets/TileMap
 /Library
 /UserSettings
 /Temp

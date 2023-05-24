@@ -57,11 +57,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Script\PlayerController.cs" />
-    <Compile Include="Assets\Script\Mouse.cs" />
+    <Compile Include="Assets\Script\Monster\Mouse.cs" />
     <Compile Include="Assets\Script\BlowTileScript\RightBlowAwayScript.cs" />
     <Compile Include="Assets\Script\BlowTileScript\LeftBlowAwayScript.cs" />
     <Compile Include="Assets\Script\JumpTileScript\JumpTile.cs" />
-    <Compile Include="Assets\Script\MapTitle.cs" />
+    <Compile Include="Assets\Script\Monster\Bee.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Imports\platformer-art-complete-pack-0\Extra animations and enemies\Spritesheets\alienBeige.xml" />
@@ -777,9 +777,6 @@
     <Reference Include="PsdPlugin">
       <HintPath>Library\ScriptAssemblies\PsdPlugin.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>Library\ScriptAssemblies\Unity.TextMeshPro.Editor.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.VisualStudio.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VisualStudio.Editor.dll</HintPath>
     </Reference>
@@ -788,9 +785,6 @@
     </Reference>
     <Reference Include="Unity.VisualScripting.Core.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.Core.Editor.dll</HintPath>
-    </Reference>
-    <Reference Include="Unity.TextMeshPro">
-      <HintPath>Library\ScriptAssemblies\Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VisualScripting.State.Editor">
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.State.Editor.dll</HintPath>
@@ -884,6 +878,12 @@
     </Reference>
     <Reference Include="Unity.VisualScripting.State">
       <HintPath>Library\ScriptAssemblies\Unity.VisualScripting.State.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro.Editor">
+      <HintPath>Library\ScriptAssemblies\Unity.TextMeshPro.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>Library\ScriptAssemblies\Unity.TextMeshPro.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
